@@ -1,18 +1,21 @@
 /*===== GOOGLE FONTS =====*/
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
-/*===== VARIABLES CSS =====*/
+
 :root {
-  /*===== Colores =====*/
   --first-color: #1A73E8;
   --input-color: #80868B;
   --border-color: #DADCE0;
-  /*===== Fuente y tipografia =====*/
   --body-font: "Roboto", sans-serif;
   --normal-font-size: 1rem;
   --small-font-size: .75rem;
+  --panel-bg: #d9d9d9;
+  --panel-border: #a7a7a7;
+  --panel-dark: #363636;
+  --button-dark: #3b3b3b;
+  --button-dark-hover: #282828;
+  --success-color: #b2d67d;
 }
 
-/*===== BASE =====*/
 *, ::before, ::after {
   box-sizing: border-box;
 }
@@ -22,19 +25,267 @@ body {
   padding: 0;
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
+  background: #f3f6fb;
 }
 
 h1 {
   margin: 0;
 }
 
-/*===== FORM =====*/
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #1a73e8, #0b4fa3);
+  color: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  opacity: 1;
+}
+
+.a-login,
+.a-logout {
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
+
+.dashboard-content {
+  padding: 1rem 1.5rem 2rem;
+}
+
+.info-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 90px);
+  padding: 2rem 1rem;
+}
+
+.info-card {
+  max-width: 900px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(26, 115, 232, 0.08);
+  padding: 1.75rem 2rem;
+}
+
+.info-card h1,
+.info-card h2 {
+  margin-top: 0;
+  color: #1d1d1d;
+}
+
+.info-card p,
+.info-card li {
+  line-height: 1.7;
+  color: #333;
+}
+
+.info-card ul {
+  padding-left: 1.25rem;
+}
+
+.info-card a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.info-card a:hover {
+  text-decoration: underline;
+}
+
+.tables-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.data-panel {
+  background: #dfe1e4;
+  border: 1px solid var(--panel-border);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.panel-header {
+  background: rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--panel-border);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1d1d1d;
+  text-align: center;
+  padding: 0.7rem 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+.panel-body {
+  padding: 1rem 1.2rem 1.1rem;
+}
+
+.small-title {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2f2f2f;
+  margin-bottom: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.field-list,
+.grid-two,
+.filters-grid {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.grid-two {
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+}
+
+input, select, textarea, button {
+  font: inherit;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #b8b8b8;
+  background: rgba(255,255,255,0.2);
+  color: #222;
+  padding: 0.7rem 0.8rem;
+  min-height: 2.6rem;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+button {
+  border: none;
+  background: var(--button-dark);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: var(--button-dark-hover);
+}
+
+button.secondary {
+  background: #8c8c8c;
+}
+
+button.secondary:hover {
+  background: #707070;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.button-row button {
+  min-width: 140px;
+}
+
+.invoice-grid input:last-child {
+  grid-column: span 2;
+}
+
+.box-block {
+  grid-column: 1 / -1;
+  min-height: 70px;
+  border: 1px solid #b7b7b7;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.filters-grid {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.filters-grid label {
+  font-size: 0.78rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+.check-group {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.check-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.compact input,
+.compact select,
+.compact textarea {
+  width: 100%;
+}
+
+/*===== LOGIN FORM ORIGINAL =====*/
 .l-form {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  
 }
 
 .form {
@@ -42,17 +293,21 @@ h1 {
   padding: 3rem 2rem;
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(92, 99, 105, 0.2);
-  
+  background: rgba(255,255,255,0.85);
 }
+
 .form__title {
   font-weight: 500;
   margin-bottom: 2.5rem;
+  text-align: center;
 }
+
 .form__div {
   position: relative;
   height: 52px;
   margin-bottom: 1.5rem;
 }
+
 .form__input {
   position: absolute;
   top: 0;
@@ -67,6 +322,7 @@ h1 {
   background: none;
   z-index: 1;
 }
+
 .form__label {
   position: absolute;
   left: 1rem;
@@ -77,6 +333,7 @@ h1 {
   font-size: var(--normal-font-size);
   transition: 0.3s;
 }
+
 .form__actions {
   display: flex;
   gap: 1rem;
@@ -111,7 +368,6 @@ h1 {
   background-color: #9c3914;
 }
 
-/*Input focus move up label*/
 .form__input:focus + .form__label {
   top: -0.5rem;
   left: 0.8rem;
@@ -121,7 +377,6 @@ h1 {
   z-index: 10;
 }
 
-/*Input focus sticky top label*/
 .form__input:not(:placeholder-shown).form__input:not(:focus) + .form__label {
   top: -0.5rem;
   left: 0.8rem;
@@ -130,7 +385,22 @@ h1 {
   font-weight: 500;
 }
 
-/*Input focus*/
 .form__input:focus {
   border: 2px solid var(--first-color);
+}
+
+@media (max-width: 900px) {
+  .table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

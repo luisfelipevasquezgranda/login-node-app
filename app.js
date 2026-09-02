@@ -33,24 +33,15 @@ app.use(
 const connection = require("./database/db");
 
 // 9 - Rutas
-// La raíz muestra el login al entrar al servidor para que la primera pantalla sea la de autenticación.
 app.get("/", (request, response) => {
   response.render("login");
 });
 
-// Ruta explícita del login, por si se quiere acceder directamente a /login.
 app.get("/login", (request, response) => {
   response.render("login");
 });
 
-// Vista principal protegida: requiere que el usuario esté logueado para acceder a index.
 app.get("/index", (request, response) => {
-  // 10 - Se verifica si el usuario está logueado, si no lo está se redirige al login.
-  //if (!request.session.loggedin) {
-  //   return response.redirect("/");
-  // }
-
-  // Se toma la alerta guardada en sesión y se limpia para que no se repita.
   const alert = request.session.alert;
   delete request.session.alert;
 
@@ -59,6 +50,27 @@ app.get("/index", (request, response) => {
     name: request.session.name,
     msg: request.session.name,
     alert,
+  });
+});
+
+app.get("/tablas", (request, response) => {
+  response.render("tablas", {
+    login: !!request.session.loggedin,
+    name: request.session.name || "",
+  });
+});
+
+app.get("/ayuda", (request, response) => {
+  response.render("ayuda", {
+    login: !!request.session.loggedin,
+    name: request.session.name || "",
+  });
+});
+
+app.get("/acerca", (request, response) => {
+  response.render("acerca", {
+    login: !!request.session.loggedin,
+    name: request.session.name || "",
   });
 });
 
@@ -96,8 +108,6 @@ app.post("/register", async (req, res) => {
   );
 });
 
-//11 - Metodo para la autenticacion
-// Si las credenciales son correctas, se crea la sesión y se redirige al index.
 app.post("/auth", async (req, res) => {
   const name = req.body.name;
   const password = req.body.password;
@@ -116,7 +126,6 @@ app.post("/auth", async (req, res) => {
           results.length === 0 ||
           !(await bcryptjs.compare(password, results[0].pass))
         ) {
-          // Error de login: se muestra alerta en la misma vista del login.
           res.render("login", {
             alert: true,
             alertTitle: "Error",
@@ -127,7 +136,6 @@ app.post("/auth", async (req, res) => {
             ruta: "login",
           });
         } else {
-          // Login exitoso: se guarda la sesión del usuario y la alerta de bienvenida.
           req.session.loggedin = true;
           req.session.name = results[0].name;
           req.session.alert = {
@@ -148,20 +156,15 @@ app.post("/auth", async (req, res) => {
   }
 });
 
-// 12 - auth middleware para proteger rutas
-
-// 13 - Ruta para cerrar sesión
 app.use(function (req, res, next) {
   if (!req.user)
     res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
   next();
 });
 
-//Logout
-//Destruye la sesión.
 app.get("/logout", function (req, res) {
   req.session.destroy(() => {
-    res.redirect("/"); // siempre se ejecutará después de que se destruya la sesión
+    res.redirect("/");
   });
 });
 

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <title>Acerca de</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <div class="brand">Dashboard</div>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="#">Facturación</a></li>
+        <li><a href="#">Seguridad</a></li>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca" class="active">Acerca de</a></li>
+        <li><a href="/acerca">Información</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="/logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
+
+    <main class="info-page">
+      <section class="info-card">
+        <h1>Acerca de este proyecto</h1>
+        <p>
+          Este proyecto fue creado con <strong>Node.js</strong>, <strong>Express</strong> y
+          <strong>EJS</strong> para desarrollar una aplicación web con autenticación de usuarios,
+          manejo de sesiones y vistas dinámicas.
+        </p>
+        <p>
+          La estructura está organizada en varias partes: el servidor principal en
+          <strong>app.js</strong>, la conexión a la base de datos en
+          <strong>database/db.js</strong>, las vistas en <strong>views/</strong> y los estilos
+          en <strong>public/css/style.css</strong>.
+        </p>
+        <p>
+          También se trabajó con <strong>MySQL</strong> para guardar los usuarios y con
+          <strong>bcryptjs</strong> para cifrar las contraseñas, de forma que el sistema pueda
+          registrar e iniciar sesión de forma segura.
+        </p>
+        <p>
+          La idea del proyecto es crear un panel administrativo sencillo donde se puedan manejar
+          diferentes módulos, como login, tablas, facturación y seguridad, todo dentro de una
+          misma aplicación web.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

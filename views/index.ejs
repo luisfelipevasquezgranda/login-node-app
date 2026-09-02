@@ -1,43 +1,50 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="resources/css/style.css">
     <title>Welcome</title>
-    <style>      
-    
-    </style>
   </head>
   <body class="text-center">
-        
+    <nav class="topbar">
+      <div class="brand">Dashboard</div>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="#">Facturación</a></li>
+        <li><a href="#">Seguridad</a></li>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+        <li><a href="/acerca">Información</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
 
+    <main class="dashboard-content">
+      <h1>Home Page</h1>
+      <% if (login) { %>
+        <h1>User connected: <strong><%= name %></strong></h1>
+      <% } else { %>
+        <h1><strong><%= name %></strong></h1>
+      <% } %>
+    </main>
 
-
-            <h1>Home Page</h1>
-            <% if (login) { %>                
-                <h1>User connected: <strong><%= name %></strong></h1>                        
-                <a href="logout" class="a-logout">Logout</a>
-            <%} else { %>
-                <h1><strong><%= name %></strong></h1>   
-                <a href="login" class="a-login">Go to login</a>
-            <% } %>
-          
-
-          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-          <script>
-            
-
-            if (alertData) {
-              Swal.fire({
-                title: alertData.alertTitle,
-                text: alertData.alertMessage,
-                icon: alertData.alertIcon,
-                showConfirmButton: !!alertData.showConfirmButton,
-                timer: alertData.timer ? Number(alertData.timer) : undefined,
-              });
-            }
-          </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+      if (alertData) {
+        Swal.fire({
+          title: alertData.alertTitle,
+          text: alertData.alertMessage,
+          icon: alertData.alertIcon,
+          showConfirmButton: !!alertData.showConfirmButton,
+          timer: alertData.timer ? Number(alertData.timer) : undefined,
+        });
+      }
+    </script>
   </body>
 </html>

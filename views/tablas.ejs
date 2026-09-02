@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <title>Tablas</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <div class="brand">Dashboard</div>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas" class="active">Tablas</a></li>
+        <li><a href="#">Facturación</a></li>
+        <li><a href="#">Seguridad</a></li>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+        <li><a href="/acerca">Información</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="/logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
+
+    <main class="dashboard-content">
+      <section class="tables-section">
+        <div class="table-row">
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">NUEVO REGISTRO CLIENTE</div>
+              <div class="field-list">
+                <input type="text" placeholder="Nombre Cliente">
+                <input type="text" placeholder="Documento">
+                <input type="text" placeholder="Dirección">
+                <input type="text" placeholder="Teléfono">
+                <input type="text" placeholder="Email">
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">ADMINISTRACIÓN DE PRODUCTOS</div>
+              <div class="grid-two">
+                <input type="text" placeholder="Nombre Producto">
+                <select><option>Categoría</option></select>
+                <input type="text" placeholder="Código Referencia">
+                <input type="text" placeholder="Ruta Imagen">
+                <input type="text" placeholder="Precio Compra">
+                <input type="text" placeholder="Detalles producto">
+                <input type="text" placeholder="Precio Venta">
+                <input type="text" placeholder="Cantidad stock">
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="table-row">
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">CATEGORÍA DE PRODUCTOS</div>
+              <div class="field-list compact">
+                <input type="text" placeholder="Nombre Categoría">
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">ADMINISTRACIÓN FACTURAS</div>
+              <div class="grid-two invoice-grid">
+                <input type="text" placeholder="Nro Factura">
+                <input type="text" placeholder="Cliente">
+                <input type="text" placeholder="Empleado">
+                <input type="text" placeholder="Fecha Registro">
+                <input type="text" placeholder="Descuento">
+                <input type="text" placeholder="Total factura">
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="table-row">
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">GENERAR INFORMES DE FACTURACIÓN</div>
+              <div class="filters-grid">
+                <label>Selección informe</label>
+                <select><option>Informe</option></select>
+                <label>Fecha inicio</label>
+                <input type="date">
+                <label>Fecha fin</label>
+                <input type="date">
+                <div class="check-group">
+                  <label><input type="checkbox"> Detalle</label>
+                  <label><input type="checkbox"> Total</label>
+                </div>
+              </div>
+              <div class="button-row">
+                <button>GENERAR INFORME</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">ADMINISTRACIÓN DE EMPLEADOS</div>
+              <div class="grid-two">
+                <input type="text" placeholder="Nombre Empleado">
+                <select><option>Rol Empleado</option></select>
+                <input type="text" placeholder="Documento">
+                <input type="date" placeholder="F. Ingreso">
+                <input type="text" placeholder="Dirección">
+                <input type="text" placeholder="Teléfono">
+                <input type="text" placeholder="Email">
+                <div class="box-block">DATOS ADICIONALES</div>
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="table-row">
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">ROL DE EMPLEADOS</div>
+              <div class="field-list compact">
+                <input type="text" placeholder="Nombre Rol">
+                <textarea placeholder="Descripción detallada del rol"></textarea>
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-body">
+              <div class="small-title">ADMINISTRACIÓN DE USUARIOS DEL SISTEMA</div>
+              <div class="field-list compact">
+                <select><option>Empleado</option></select>
+                <input type="text" placeholder="Usuario">
+                <input type="text" placeholder="Clave">
+              </div>
+              <div class="button-row">
+                <button>ACTUALIZAR</button>
+                <button class="secondary">SALIR</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

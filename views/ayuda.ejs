@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <title>Ayuda</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <div class="brand">Dashboard</div>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="#">Facturación</a></li>
+        <li><a href="#">Seguridad</a></li>
+        <li><a href="/ayuda" class="active">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+        <li><a href="/acerca">Información</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="/logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
+
+    <main class="info-page">
+      <section class="info-card">
+        <h1>Ayuda</h1>
+        <p>
+          Aquí puedes consultar la documentación oficial de Node.js para resolver dudas sobre
+          rutas, Express, módulos y manejo del servidor.
+        </p>
+        <ul>
+          <li><a href="https://nodejs.org/en/docs/" target="_blank" rel="noopener noreferrer">Documentación oficial de Node.js</a></li>
+          <li><a href="https://expressjs.com/es/" target="_blank" rel="noopener noreferrer">Documentación de Express</a></li>
+          <li><a href="https://ejs.co/#docs" target="_blank" rel="noopener noreferrer">Documentación de EJS</a></li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

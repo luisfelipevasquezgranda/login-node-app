@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--===== CSS =====-->
+        <link rel="stylesheet" href="resources/css/style.css">
+
+        <title>Login form style google</title>
+    </head>
+    <body
+        <% if (typeof alert != "undefined") { %>
+            data-alert-title="<%= alertTitle %>"
+            data-alert-message="<%= alertMessage %>"
+            data-alert-icon="<%= alertIcon %>"
+            data-show-confirm-button="<%= showConfirmButton %>"
+            data-timer="<%= timer %>"
+            data-ruta="<%= ruta %>"
+        <% } %>
+    >
+        <div class="l-form">
+            <form action="/register" class="form" method="POST">
+                <h1 class="form__title">Sign Up</h1>
+
+                <div class="form__div">
+                    <input
+                        type="text"
+                        class="form__input"
+                        placeholder=" "
+                        pattern="[A-Za-z]+"
+                        title="El usuario solo puede contener letras"
+                        required
+                        name="name"
+                    >
+                    <label for="name" class="form__label">Name</label>
+                </div>
+
+                <div class="form__div">
+                    <input
+                        type="password"
+                        class="form__input"
+                        placeholder=" "
+                        minlength="8"
+                        title="La contraseña debe tener exactamente 8 caracteres"
+                        required
+                        name="password"
+                    >
+                    <label for="password" class="form__label">Password</label>
+                </div>
+
+                <div class="form__actions">
+                    <input type="submit" class="form__button form__button_up" value="Sign up">
+                </div>
+            </form>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+            const body = document.body;
+            const hasAlert = body.dataset.alertTitle;
+
+            if (hasAlert) {
+                const alertConfig = {
+                    title: body.dataset.alertTitle,
+                    text: body.dataset.alertMessage,
+                    icon: body.dataset.alertIcon,
+                    showConfirmButton: body.dataset.showConfirmButton === 'true',
+                    timer: Number(body.dataset.timer || 0)
+                };
+
+                Swal.fire(alertConfig).then(() => {
+                    window.location = '/' + body.dataset.ruta;
+                });
+            }
+        </script>
+    </body>
+</html>

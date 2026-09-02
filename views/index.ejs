@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <title>Welcome</title>
+    <style>      
+    
+    </style>
+  </head>
+  <body class="text-center">
+        
+
+
+
+            <h1>Home Page</h1>
+            <% if (login) { %>                
+                <h1>User connected: <strong><%= name %></strong></h1>                        
+                <a href="logout" class="a-logout">Logout</a>
+            <%} else { %>
+                <h1><strong><%= name %></strong></h1>   
+                <a href="login" class="a-login">Go to login</a>
+            <% } %>
+          
+
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+          <script>
+            
+
+            if (alertData) {
+              Swal.fire({
+                title: alertData.alertTitle,
+                text: alertData.alertMessage,
+                icon: alertData.alertIcon,
+                showConfirmButton: !!alertData.showConfirmButton,
+                timer: alertData.timer ? Number(alertData.timer) : undefined,
+              });
+            }
+          </script>
+  </body>
+</html>

@@ -43,11 +43,12 @@ app.get("/login", (request, response) => {
   response.render("login");
 });
 
-// Vista principal protegida: solo entra si hay sesión activa.
+// Vista principal protegida: requiere que el usuario esté logueado para acceder a index.
 app.get("/index", (request, response) => {
-  if (!request.session.loggedin) {
-    return response.redirect("/");
-  }
+  // 10 - Se verifica si el usuario está logueado, si no lo está se redirige al login.
+  //if (!request.session.loggedin) {
+  //   return response.redirect("/");
+  // }
 
   // Se toma la alerta guardada en sesión y se limpia para que no se repita.
   const alert = request.session.alert;

@@ -1,0 +1,16 @@
+<nav class="topbar">
+  <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
+  <ul class="nav-menu">
+    <li><a href="/index" class="<%= active === 'home' ? 'active' : '' %>">Principal</a></li>
+    <li><a href="/tablas" class="<%= active === 'tables' ? 'active' : '' %>">Tablas</a></li>
+    <li><a href="/facturacion" class="<%= active === 'billing' ? 'active' : '' %>">Facturas</a></li>
+    <% if (canAccessSecurity) { %><li><a href="/seguridad" class="<%= active === 'security' ? 'active' : '' %>">Seguridad</a></li><% } %>
+    <li><a href="/ayuda" class="<%= active === 'help' ? 'active' : '' %>">Ayuda</a></li>
+    <li><a href="/acerca" class="<%= active === 'about' ? 'active' : '' %>">Acerca de</a></li>
+  </ul>
+  <% if (login) { %>
+    <form action="/logout" method="POST" class="nav-logout-form"><button type="submit" class="a-logout">Salir</button></form>
+  <% } else { %>
+    <a href="/login" class="a-login">Iniciar sesión</a>
+  <% } %>
+</nav>

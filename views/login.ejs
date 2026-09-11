@@ -9,16 +9,7 @@
 
         <title>Login form style google</title>
     </head>
-    <body
-        <% if (typeof alert != "undefined") { %>
-            data-alert-title="<%= alertTitle %>"
-            data-alert-message="<%= alertMessage %>"
-            data-alert-icon="<%= alertIcon %>"
-            data-show-confirm-button="<%= showConfirmButton %>"
-            data-timer="<%= timer %>"
-            data-ruta="<%= ruta %>"
-        <% } %>
-    >
+    <body>
         <div class="l-form">
             <form action="/auth" class="form" method="POST">
                 <h1 class="form__title">Sign In</h1>
@@ -62,20 +53,6 @@
                 </div>
             </form>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-   <% if (typeof alert != "undefined")  { %>
-    <script>
-    Swal.fire({
-      title:'<%= alertTitle %>',
-      text:'<%= alertMessage %>',
-      icon:'<%= alertIcon %>',
-      showConfirmButton: <%= showConfirmButton %>,
-      timer: <%= timer %>
-    }).then(()=>{
-      window.location='/<%= ruta %>'
-    })
-    </script>
-  <% } %>
+                <%- include('_alert') %>
     </body>
 </html>

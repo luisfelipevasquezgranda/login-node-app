@@ -1,0 +1,14 @@
+<% if (typeof alert !== 'undefined' && alert) { %>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script>
+    Swal.fire({
+      title: <%- JSON.stringify(alertTitle) %>,
+      text: <%- JSON.stringify(alertMessage) %>,
+      icon: <%- JSON.stringify(alertIcon) %>,
+      showConfirmButton: <%= Boolean(showConfirmButton) %>,
+      timer: <%= Number(timer) || 0 %>
+    }).then(() => {
+      window.location = '/' + <%- JSON.stringify(ruta || '') %>;
+    });
+  </script>
+<% } %>

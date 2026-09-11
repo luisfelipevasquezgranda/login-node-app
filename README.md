@@ -1,96 +1,71 @@
-<<<<<<< HEAD
+# Sistema de gestión con Node.js, Express y MySQL
 
-# login-node-app
-
-=======
-
-# Proyecto de Login con Node.js + Express + MySQL
-
-Este proyecto permite registrar e iniciar sesión con usuarios almacenados en una base de datos MySQL.
+Aplicación web con autenticación, permisos, clientes, productos, categorías y facturación.
 
 ## Requisitos
 
 - Node.js 18 o superior
 - npm
 - MySQL 8 o compatible
-- Git Bash, PowerShell o terminal de sistema
 
-## Dependencias del proyecto
+## Instalación
 
-Se instalan con npm usando el archivo package.json:
+```bash
+npm install
+```
 
-- express
-- ejs
-- mysql2
-- dotenv
-- bcryptjs
-- express-session
-- nodemon (solo para desarrollo)
+Configura `env/.env`:
 
-## Paso a paso para ejecutar
+```env
+DB_HOST=localhost
+DB_USER=app_user
+DB_PASSWORD=una-contrasena-segura
+DB_DATABASE=login_node_curso
+SESSION_SECRET=una-clave-larga-y-aleatoria
+PORT=3000
+```
 
-1. Instala Node.js desde: https://nodejs.org/
-2. Instala MySQL y crea una base de datos llamada:
-   `login_node_curso`
-3. Abre la terminal en la carpeta del proyecto.
-4. Ejecuta:
+La base de datos debe contener las tablas `users`, `tblclientes`, `tblproducto`, `tblcategoria_prod`, `tblfactura`, `tblestado_factura` y `tbldetalle_factura`.
 
-   ```bash
-   npm install
-   ```
+Para instalaciones existentes, ejecuta las migraciones de `database/`:
 
-5. Verifica que el archivo `env/.env` contenga los datos correctos:
+- `add-category-creation-fields.sql`
+- `add-user-permissions.sql`
 
-   ```env
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=
-   DB_DATABASE=login_node_curso
-   ```
+## Ejecución
 
-6. Crea la tabla `users` en MySQL con esta estructura:
+Desarrollo:
 
-   ```sql
-   CREATE TABLE users (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(255) NOT NULL,
-     pass VARCHAR(255) NOT NULL
-   );
-   ```
+```bash
+npm run dev
+```
 
-7. Inicia la aplicación:
+Producción:
 
-   ```terminal
-   npm run dev
-   ```
+```bash
+npm start
+```
 
-8. Abre en el navegador:
+Abre `http://localhost:3000`.
 
-   ```text
-   http://localhost:3000
-   ```
+## Permisos
 
-## Uso
+El registro público crea usuarios sin acceso a Productos ni Seguridad. Un usuario autorizado puede asignar esos permisos desde Seguridad.
 
-- La primera pantalla es el login.
-- Si el usuario no existe, puede registrar uno en la opción de registro.
-- Al iniciar sesión correctamente, el sistema redirige a la vista principal.
+- Productos y categorías: requieren `CanAccessProducts`.
+- Seguridad y usuarios: requieren `CanAccessSecurity`.
+- Clientes y facturación: requieren una sesión iniciada.
 
-## Archivos importantes
+## Estructura
 
-- `app.js` — configuración del servidor y rutas
-- `database/db.js` — conexión a MySQL
-- `views/login.ejs` — formulario de login
-- `views/register.ejs` — formulario de registro
-- `views/index.ejs` — página de bienvenida
-- `env/.env` — variables de entorno
-
-## Nota
-
-para ejecutar el proyecto en otra máquina, se debe tener:
-
-- Node.js instalado
-- MySQL instalado y corriendo
-- la base de datos creada
-- el comando `npm install` ejecutado antes de iniciar la app
-  > > > > > > > 9134e44 (Primer commit)
+- `app.js`: configuración del servidor y montaje de routers.
+- `routes/auth.js`: login, registro y logout.
+- `routes/users.js`: usuarios y permisos.
+- `routes/products.js`: productos y categorías.
+- `routes/clients.js`: clientes.
+- `routes/invoices.js`: nueva factura y administración.
+- `middleware/auth.js`: autenticación y autorización.
+- `views/`: plantillas EJS.
+- `views/_nav.ejs`: navegación compartida.
+- `views/_alert.ejs`: alertas compartidas.
+- `database/db.js`: conexión MySQL.

@@ -7,22 +7,7 @@
     <title>Seguridad</title>
   </head>
   <body class="text-center" data-alert='<%= JSON.stringify(alert || null) %>'>
-    <nav class="topbar">
-      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
-      <ul class="nav-menu">
-        <li><a href="/index">Principal</a></li>
-        <li><a href="/tablas">Tablas</a></li>
-        <li><a href="/facturacion">Facturas</a></li>
-        <li><a href="/seguridad" class="active">Seguridad</a></li>
-        <li><a href="/ayuda">Ayuda</a></li>
-        <li><a href="/acerca">Acerca de</a></li>
-      </ul>
-      <% if (login) { %>
-        <a href="/logout" class="a-logout">Logout</a>
-      <% } else { %>
-        <a href="/login" class="a-login">Go to login</a>
-      <% } %>
-    </nav>
+    <%- include('_nav', { active: 'security' }) %>
 
     <main class="dashboard-content">
       <section class="tables-section">

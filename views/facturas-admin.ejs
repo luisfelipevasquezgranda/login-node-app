@@ -7,18 +7,7 @@
     <title>Administrar facturas</title>
   </head>
   <body>
-    <nav class="topbar">
-      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
-      <ul class="nav-menu">
-        <li><a href="/index">Principal</a></li>
-        <li><a href="/tablas">Tablas</a></li>
-        <li><a href="/facturacion" class="active">Facturas</a></li>
-        <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
-        <li><a href="/ayuda">Ayuda</a></li>
-        <li><a href="/acerca">Acerca de</a></li>
-      </ul>
-      <% if (login) { %><a href="/logout" class="a-logout">Logout</a><% } else { %><a href="/login" class="a-login">Go to login</a><% } %>
-    </nav>
+    <%- include('_nav', { active: 'billing' }) %>
 
     <main class="dashboard-content billing-page">
       <div class="module-heading">

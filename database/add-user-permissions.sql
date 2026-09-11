@@ -1,0 +1,5 @@
+USE login_node_curso;
+
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS CanAccessProducts TINYINT(1) NOT NULL DEFAULT 1 AFTER pass,
+  ADD COLUMN IF NOT EXISTS CanAccessSecurity TINYINT(1) NOT NULL DEFAULT 1 AFTER CanAccessProducts;

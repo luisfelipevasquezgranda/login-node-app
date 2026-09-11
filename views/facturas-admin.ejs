@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <title>Administrar facturas</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="/facturacion" class="active">Facturas</a></li>
+        <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+      </ul>
+      <% if (login) { %><a href="/logout" class="a-logout">Logout</a><% } else { %><a href="/login" class="a-login">Go to login</a><% } %>
+    </nav>
+
+    <main class="dashboard-content billing-page">
+      <div class="module-heading">
+        <p class="eyebrow">Facturación</p>
+        <h1>Administrar facturas</h1>
+        <p>Busca, revisa el estado y elimina facturas desde un solo lugar.</p>
+      </div>
+
+      <section class="billing-card invoice-admin-toolbar">
+        <form action="/facturacion/admin" method="GET" class="search-form">
+          <input type="search" name="search" value="<%= search %>" placeholder="Buscar por número o cliente">
+          <button type="submit" class="primary-action">Buscar</button>
+          <% if (search) { %><a href="/facturacion/admin" class="secondary-link">Limpiar</a><% } %>
+        </form>
+        <a href="/facturacion/nueva" class="action-link">Nueva factura</a>
+      </section>
+
+      <section class="billing-card invoice-history">
+        <div class="card-heading"><h2>Facturas</h2><span><%= invoices.length %> resultados</span></div>
+        <div class="billing-table-wrap">
+          <table class="billing-table admin-invoice-table">
+            <thead><tr><th>Número</th><th>Fecha</th><th>Cliente</th><th>Estado</th><th>Detalles</th><th>Total</th><th>Acciones</th></tr></thead>
+            <tbody>
+              <% if (invoices.length === 0) { %><tr><td colspan="7" class="empty-row">No se encontraron facturas.</td></tr><% } %>
+              <% invoices.forEach((invoice) => { %>
+                <tr>
+                  <td><strong>#<%= invoice.IdFactura %></strong></td>
+                  <td><%= invoice.DtmFecha || '-' %></td>
+                  <td><%= invoice.Cliente || 'Sin cliente' %></td>
+                  <td>
+                    <form action="/facturacion/facturas/<%= invoice.IdFactura %>/update" method="POST" class="status-form">
+                      <input type="hidden" name="DtmFecha" value="<%= invoice.DtmFecha || '' %>">
+                      <input type="hidden" name="IdCliente" value="<%= invoice.IdCliente || '' %>">
+                      <input type="hidden" name="IdEmpleado" value="<%= invoice.IdEmpleado || '' %>">
+                      <input type="hidden" name="NumDescuento" value="<%= invoice.NumDescuento ?? '' %>">
+                      <input type="hidden" name="NumImpuesto" value="<%= invoice.NumImpuesto ?? '' %>">
+                      <input type="hidden" name="NumValorTotal" value="<%= invoice.NumValorTotal ?? '' %>">
+                      <select name="IdEstado"><% statuses.forEach((status) => { %><option value="<%= status.IdEstadoFactura %>" <%= String(invoice.IdEstado) === String(status.IdEstadoFactura) ? 'selected' : '' %>><%= status.StrDescripcion %></option><% }); %></select>
+                      <button type="submit">Guardar</button>
+                    </form>
+                  </td>
+                  <td><%= invoice.CantidadDetalles %></td>
+                  <td>$<%= Number(invoice.NumValorTotal || 0).toFixed(2) %></td>
+                  <td><form action="/facturacion/facturas/<%= invoice.IdFactura %>/delete" method="POST" onsubmit="return confirm('¿Eliminar esta factura y todos sus detalles?');"><button type="submit" class="danger-button">Eliminar</button></form></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

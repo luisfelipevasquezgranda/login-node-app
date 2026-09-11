@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <title>Clientes</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas" class="active">Tablas</a></li>
+        <li><a href="/facturacion">Facturas</a></li>
+        <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="/logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
+
+    <main class="dashboard-content">
+      <section class="tables-section">
+        <div class="module-heading">
+          <p class="eyebrow">Tablas / Clientes</p>
+          <h1>Administración de clientes</h1>
+          <p>Registra, consulta y actualiza la información de tus clientes.</p>
+        </div>
+        <article class="data-panel client-form-panel">
+          <div class="panel-body">
+            <div class="small-title"><%= editingClient ? "EDITAR CLIENTE" : "NUEVO REGISTRO CLIENTE" %></div>
+            <form action="<%= editingClient ? '/tablas/clientes/' + editingClient.IdCliente + '/update' : '/tablas/clientes' %>" method="POST" class="client-form">
+              <div class="grid-two">
+                <label>Nombre<input type="text" name="StrNombre" maxlength="50" required value="<%= editingClient?.StrNombre || '' %>"></label>
+                <label>Documento<input type="number" name="NumDocumento" value="<%= editingClient?.NumDocumento || '' %>"></label>
+                <label>Dirección<input type="text" name="StrDireccion" maxlength="70" value="<%= editingClient?.StrDireccion || '' %>"></label>
+                <label>Teléfono<input type="text" name="StrTelefono" maxlength="30" value="<%= editingClient?.StrTelefono || '' %>"></label>
+                <label class="full-width">Email<input type="email" name="StrEmail" maxlength="50" value="<%= editingClient?.StrEmail || '' %>"></label>
+              </div>
+              <div class="button-row">
+                <button type="submit"><%= editingClient ? "ACTUALIZAR" : "GUARDAR" %></button>
+                <% if (editingClient) { %><a href="/tablas/clientes" class="secondary-link">Cancelar</a><% } %>
+              </div>
+            </form>
+          </div>
+        </article>
+
+        <div class="clients-table-wrap">
+          <table class="clients-table">
+            <thead>
+              <tr><th>ID</th><th>Nombre</th><th>Documento</th><th>Contacto</th><th>Modificado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <% if (clients.length === 0) { %>
+                <tr><td colspan="6" class="empty-row">No hay clientes registrados.</td></tr>
+              <% } else { %>
+                <% clients.forEach((client) => { %>
+                  <tr>
+                    <td><%= client.IdCliente %></td>
+                    <td><strong><%= client.StrNombre %></strong><small><%= client.StrDireccion || '' %></small></td>
+                    <td><%= client.NumDocumento || '-' %></td>
+                    <td><%= client.StrTelefono || '-' %><br><%= client.StrEmail || '-' %></td>
+                    <td><%= client.DtmFechaModifica || '-' %><small><%= client.StrUsuarioModifico || '' %></small></td>
+                    <td class="actions-cell">
+                      <a href="/tablas/clientes/<%= client.IdCliente %>/edit" class="action-link small">Editar</a>
+                      <form action="/tablas/clientes/<%= client.IdCliente %>/delete" method="POST" onsubmit="return confirm('¿Eliminar este cliente?');">
+                        <button type="submit" class="danger-button">Eliminar</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+        <div class="button-row"><a href="/tablas" class="secondary-link">Volver a tablas</a></div>
+      </section>
+    </main>
+  </body>
+</html>

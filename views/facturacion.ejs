@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <title>Nueva factura</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="/facturacion" class="active">Facturas</a></li>
+        <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+      </ul>
+      <% if (login) { %><a href="/logout" class="a-logout">Logout</a><% } else { %><a href="/login" class="a-login">Go to login</a><% } %>
+    </nav>
+
+    <main class="dashboard-content billing-page">
+      <div class="module-heading">
+        <p class="eyebrow">Facturación</p>
+        <h1>Nueva factura</h1>
+        <p>Selecciona un cliente, agrega productos y guarda la factura.</p>
+      </div>
+
+      <section class="invoice-workspace">
+        <div class="invoice-main">
+          <div class="billing-card">
+            <div class="card-heading"><h2>Cliente</h2><span>Borrador</span></div>
+            <label class="billing-label">Selecciona un cliente
+              <select id="client-select" required>
+                <option value="">Selecciona un cliente</option>
+                <% clients.forEach((client) => { %><option value="<%= client.IdCliente %>"><%= client.StrNombre %></option><% }); %>
+              </select>
+            </label>
+          </div>
+
+          <div class="billing-card">
+            <div class="card-heading"><h2>Productos</h2><span><%= products.length %> disponibles</span></div>
+            <div class="product-picker">
+              <select id="product-select">
+                <option value="">Selecciona un producto</option>
+                <% products.forEach((product) => { %><option value="<%= product.IdProducto %>" data-price="<%= product.NumPrecioVenta || 0 %>"><%= product.StrNombre %> | $<%= product.NumPrecioVenta || 0 %></option><% }); %>
+              </select>
+              <input id="quantity-input" type="number" min="1" value="1" aria-label="Cantidad">
+              <button type="button" id="add-product">Agregar</button>
+            </div>
+            <div class="cart-table-wrap">
+              <table class="cart-table">
+                <thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Total</th><th></th></tr></thead>
+                <tbody id="cart-body"><tr><td colspan="5" class="empty-row">Agrega productos a la factura.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <aside class="invoice-summary billing-card">
+          <h2>Resumen</h2>
+          <div class="summary-line"><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+          <label class="billing-label">Descuento<input id="discount-input" type="number" min="0" step="0.01" value="0"></label>
+          <label class="billing-label">Impuesto<input id="tax-input" type="number" min="0" step="0.01" value="0"></label>
+          <div class="summary-total"><span>Total</span><strong id="grand-total">$0.00</strong></div>
+          <button type="button" id="save-invoice" class="primary-action">Crear factura</button>
+          <button type="button" id="clear-invoice" class="secondary-action">Limpiar</button>
+          <p id="billing-message" class="billing-message" role="status"></p>
+        </aside>
+      </section>
+    </main>
+
+    <script>
+      const cart = [];
+      const productSelect = document.querySelector('#product-select');
+      const quantityInput = document.querySelector('#quantity-input');
+      const cartBody = document.querySelector('#cart-body');
+      const money = (value) => `$${Number(value).toFixed(2)}`;
+
+      function renderCart() {
+        cartBody.innerHTML = cart.length
+          ? cart.map((item, index) => `<tr><td>${item.name}</td><td>${money(item.price)}</td><td>${item.quantity}</td><td>${money(item.price * item.quantity)}</td><td><button type="button" class="remove-item" data-index="${index}">Quitar</button></td></tr>`).join('')
+          : '<tr><td colspan="5" class="empty-row">Agrega productos a la factura.</td></tr>';
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const discount = Math.max(Number(document.querySelector('#discount-input').value) || 0, 0);
+        const tax = Math.max(Number(document.querySelector('#tax-input').value) || 0, 0);
+        document.querySelector('#subtotal').textContent = money(subtotal);
+        document.querySelector('#grand-total').textContent = money(Math.max(subtotal - discount + tax, 0));
+      }
+
+      document.querySelector('#add-product').addEventListener('click', () => {
+        const option = productSelect.selectedOptions[0];
+        const quantity = Number(quantityInput.value);
+        if (!productSelect.value || quantity < 1) return;
+        const existing = cart.find((item) => item.id === productSelect.value);
+        if (existing) existing.quantity += quantity;
+        else cart.push({ id: productSelect.value, name: option.textContent.split(' | ')[0], price: Number(option.dataset.price) || 0, quantity });
+        productSelect.value = '';
+        quantityInput.value = 1;
+        renderCart();
+      });
+
+      cartBody.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-item')) { cart.splice(Number(event.target.dataset.index), 1); renderCart(); }
+      });
+      document.querySelector('#discount-input').addEventListener('input', renderCart);
+      document.querySelector('#tax-input').addEventListener('input', renderCart);
+      document.querySelector('#clear-invoice').addEventListener('click', () => { cart.splice(0); document.querySelector('#client-select').value = ''; document.querySelector('#discount-input').value = 0; document.querySelector('#tax-input').value = 0; document.querySelector('#billing-message').textContent = ''; renderCart(); });
+      document.querySelector('#save-invoice').addEventListener('click', async () => {
+        const message = document.querySelector('#billing-message');
+        if (!document.querySelector('#client-select').value || !cart.length) { message.textContent = 'Selecciona un cliente y agrega al menos un producto.'; return; }
+        const response = await fetch('/facturacion/registrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ IdCliente: document.querySelector('#client-select').value, NumDescuento: document.querySelector('#discount-input').value, NumImpuesto: document.querySelector('#tax-input').value, items: cart.map((item) => ({ IdProducto: item.id, NumCantidad: item.quantity })) }) });
+        const result = await response.json();
+        if (!response.ok) { message.textContent = result.message || 'No se pudo crear la factura.'; return; }
+        message.textContent = `Factura #${result.invoiceId} creada correctamente.`;
+        setTimeout(() => window.location.reload(), 700);
+      });
+      renderCart();
+    </script>
+  </body>
+</html>

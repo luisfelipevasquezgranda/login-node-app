@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <title>Productos</title>
+  </head>
+  <body>
+    <nav class="topbar">
+      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas" class="active">Tablas</a></li>
+        <li><a href="/facturacion">Facturas</a></li>
+        <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="/logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
+
+    <main class="dashboard-content">
+      <section class="tables-section">
+        <div class="module-heading">
+          <p class="eyebrow">Tablas / Productos</p>
+          <h1>Productos</h1>
+          <p>Administra el catálogo de productos.</p>
+        </div>
+        <article class="data-panel product-form-panel">
+          <div class="panel-body">
+            <div class="small-title"><%= editingProduct ? "EDITAR PRODUCTO" : "NUEVO PRODUCTO" %></div>
+            <form action="<%= editingProduct ? '/tablas/productos/' + editingProduct.IdProducto + '/update' : '/tablas/productos' %>" method="POST" class="product-form">
+              <div class="grid-two">
+                <label>Nombre<input type="text" name="StrNombre" maxlength="70" required value="<%= editingProduct?.StrNombre || '' %>"></label>
+                <label>Código<input type="text" name="StrCodigo" maxlength="30" required value="<%= editingProduct?.StrCodigo || '' %>"></label>
+                <label>Precio de compra<input type="number" name="NumPrecioCompra" step="0.01" min="0" value="<%= editingProduct?.NumPrecioCompra ?? '' %>"></label>
+                <label>Precio de venta<input type="number" name="NumPrecioVenta" step="0.01" min="0" value="<%= editingProduct?.NumPrecioVenta ?? '' %>"></label>
+                <label>Categoría
+                  <select name="idCategoria">
+                    <option value="">Sin categoría</option>
+                    <% categories.forEach((category) => { %>
+                      <option value="<%= category.idCategoria %>" <%= editingProduct?.idCategoria === category.idCategoria ? 'selected' : '' %>><%= category.StrDescripcion %></option>
+                    <% }); %>
+                  </select>
+                </label>
+                <label>Stock<input type="number" name="NumStock" min="0" value="<%= editingProduct?.NumStock ?? 0 %>"></label>
+                <label class="full-width">Detalle<textarea name="StrDetalle" maxlength="250"><%= editingProduct?.StrDetalle || '' %></textarea></label>
+                <label>Foto<input type="text" name="strFoto" maxlength="50" value="<%= editingProduct?.strFoto || '' %>"></label>
+              </div>
+              <div class="button-row">
+                <button type="submit"><%= editingProduct ? "ACTUALIZAR" : "GUARDAR" %></button>
+                <% if (editingProduct) { %><a href="/tablas/productos" class="secondary-link">Cancelar</a><% } %>
+              </div>
+            </form>
+          </div>
+        </article>
+
+        <div class="products-table-wrap">
+          <table class="products-table">
+            <thead>
+              <tr><th>ID</th><th>Producto</th><th>Código</th><th>Precios</th><th>Stock</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <% if (products.length === 0) { %>
+                <tr><td colspan="6" class="empty-row">No hay productos registrados.</td></tr>
+              <% } else { %>
+                <% products.forEach((product) => { %>
+                  <tr>
+                    <td><%= product.IdProducto %></td>
+                    <td><strong><%= product.StrNombre %></strong><small><%= product.StrDetalle || '' %></small></td>
+                    <td><%= product.StrCodigo %></td>
+                    <td>Compra: <%= product.NumPrecioCompra ?? '-' %><br>Venta: <%= product.NumPrecioVenta ?? '-' %></td>
+                    <td><%= product.NumStock ?? 0 %></td>
+                    <td class="actions-cell">
+                      <a href="/tablas/productos/<%= product.IdProducto %>/edit" class="action-link small">Editar</a>
+                      <form action="/tablas/productos/<%= product.IdProducto %>/delete" method="POST" onsubmit="return confirm('¿Eliminar este producto?');">
+                        <button type="submit" class="danger-button">Eliminar</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <section class="catalog-section category-section">
+          <div class="catalog-section-heading">
+            <div>
+              <p class="eyebrow">Catálogo</p>
+              <h2>Categorías</h2>
+              <p>Organiza los productos desde la misma pantalla.</p>
+            </div>
+            <span class="section-count"><%= categories.length %> categorías</span>
+          </div>
+          <article class="data-panel category-crud-panel">
+            <div class="panel-body">
+              <div class="small-title"><%= editingCategory ? "EDITAR CATEGORÍA" : "NUEVA CATEGORÍA" %></div>
+              <form action="<%= editingCategory ? '/tablas/categorias/' + editingCategory.idCategoria + '/update' : '/tablas/categorias' %>" method="POST" class="category-form">
+                <label>Descripción de la categoría
+                  <input type="text" name="StrDescripcion" maxlength="60" required value="<%= editingCategory?.StrDescripcion || '' %>">
+                </label>
+                <div class="button-row">
+                  <button type="submit"><%= editingCategory ? "ACTUALIZAR" : "GUARDAR" %></button>
+                  <% if (editingCategory) { %><a href="/tablas/productos" class="secondary-link">Cancelar</a><% } %>
+                </div>
+              </form>
+            </div>
+          </article>
+          <div class="categories-table-wrap">
+            <table class="categories-table">
+              <thead><tr><th>ID</th><th>Descripción</th><th>Creación</th><th>Creado por</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <% if (categories.length === 0) { %>
+                  <tr><td colspan="5" class="empty-row">No hay categorías registradas.</td></tr>
+                <% } else { categories.forEach((category) => { %>
+                  <tr>
+                    <td><%= category.idCategoria %></td>
+                    <td><%= category.StrDescripcion %></td>
+                    <td><%= category.DtmFechaCreacion || '-' %></td>
+                    <td><%= category.StrUsuarioCreo || '-' %></td>
+                    <td class="actions-cell"><a href="/tablas/categorias/<%= category.idCategoria %>/edit" class="action-link small">Editar</a><form action="/tablas/categorias/<%= category.idCategoria %>/delete" method="POST" onsubmit="return confirm('¿Eliminar esta categoría? Los productos quedarán sin categoría.');"><button type="submit" class="danger-button">Eliminar</button></form></td>
+                  </tr>
+                <% }); } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <div class="button-row"><a href="/tablas" class="secondary-link">Volver a tablas</a></div>
+      </section>
+    </main>
+  </body>
+</html>

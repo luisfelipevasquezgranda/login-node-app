@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,15 +8,14 @@
   </head>
   <body class="text-center">
     <nav class="topbar">
-      <div class="brand">Dashboard</div>
+      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
       <ul class="nav-menu">
         <li><a href="/index">Principal</a></li>
         <li><a href="/tablas">Tablas</a></li>
-        <li><a href="#">Facturación</a></li>
-        <li><a href="#">Seguridad</a></li>
+        <li><a href="/facturacion">Facturas</a></li>
+        <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
         <li><a href="/ayuda">Ayuda</a></li>
         <li><a href="/acerca">Acerca de</a></li>
-        <li><a href="/acerca">Información</a></li>
       </ul>
       <% if (login) { %>
         <a href="logout" class="a-logout">Logout</a>
@@ -26,25 +25,12 @@
     </nav>
 
     <main class="dashboard-content">
-      <h1>Home Page</h1>
-      <% if (login) { %>
-        <h1>User connected: <strong><%= name %></strong></h1>
-      <% } else { %>
-        <h1><strong><%= name %></strong></h1>
-      <% } %>
+      <section class="welcome-section">
+        <p class="eyebrow">Panel principal</p>
+        <h1>Bienvenido<% if (login) { %>, <%= name %><% } %></h1>
+        <p>Selecciona un módulo para administrar la facturación o la seguridad del sistema.</p>
+      </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script>
-      if (alertData) {
-        Swal.fire({
-          title: alertData.alertTitle,
-          text: alertData.alertMessage,
-          icon: alertData.alertIcon,
-          showConfirmButton: !!alertData.showConfirmButton,
-          timer: alertData.timer ? Number(alertData.timer) : undefined,
-        });
-      }
-    </script>
   </body>
 </html>

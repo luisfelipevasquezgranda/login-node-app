@@ -3,39 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="resources/css/style.css">
-    <title>Tablas</title>
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <title>Facturas</title>
   </head>
   <body>
     <nav class="topbar">
       <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
       <ul class="nav-menu">
         <li><a href="/index">Principal</a></li>
-        <li><a href="/tablas" class="active">Tablas</a></li>
-        <li><a href="/facturacion">Facturas</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="/facturacion" class="active">Facturas</a></li>
         <% if (canAccessSecurity) { %><li><a href="/seguridad">Seguridad</a></li><% } %>
         <li><a href="/ayuda">Ayuda</a></li>
         <li><a href="/acerca">Acerca de</a></li>
       </ul>
-      <% if (login) { %>
-        <a href="/logout" class="a-logout">Logout</a>
-      <% } else { %>
-        <a href="/login" class="a-login">Go to login</a>
-      <% } %>
+      <% if (login) { %><a href="/logout" class="a-logout">Logout</a><% } else { %><a href="/login" class="a-login">Go to login</a><% } %>
     </nav>
 
     <main class="dashboard-content">
       <section class="module-menu">
-        <p class="eyebrow">Tablas</p>
+        <p class="eyebrow">Facturas</p>
         <h1>Selecciona una sección</h1>
         <div class="module-menu-grid">
-          <% if (canAccessProducts) { %><a href="/tablas/productos" class="module-menu-item">
-            <strong>Productos</strong>
-            <span>Administración de productos y categorías.</span>
-          </a><% } %>
-          <a href="/tablas/clientes" class="module-menu-item">
-            <strong>Clientes</strong>
-            <span>Nuevo registro y datos de clientes.</span>
+          <a href="/facturacion/nueva" class="module-menu-item">
+            <strong>Nueva factura</strong>
+            <span>Selecciona cliente, productos y crea una factura.</span>
+          </a>
+          <a href="/facturacion/admin" class="module-menu-item">
+            <strong>Administrar factura</strong>
+            <span>Busca, revisa estados y administra las facturas.</span>
           </a>
         </div>
       </section>

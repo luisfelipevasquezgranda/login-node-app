@@ -1,6 +1,9 @@
 <<<<<<< HEAD
+
 # login-node-app
+
 =======
+
 # Proyecto de Login con Node.js + Express + MySQL
 
 Este proyecto permite registrar e iniciar sesión con usuarios almacenados en una base de datos MySQL.
@@ -57,7 +60,7 @@ Se instalan con npm usando el archivo package.json:
 
 7. Inicia la aplicación:
 
-   ```bash
+   ```terminal
    npm run dev
    ```
 
@@ -90,4 +93,4 @@ para ejecutar el proyecto en otra máquina, se debe tener:
 - MySQL instalado y corriendo
 - la base de datos creada
 - el comando `npm install` ejecutado antes de iniciar la app
->>>>>>> 9134e44 (Primer commit)
+  > > > > > > > 9134e44 (Primer commit)

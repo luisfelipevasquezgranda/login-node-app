@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/resources/css/style.css">
+		<title>Editar usuario</title>
+	</head>
+	<body>
+		<nav class="topbar"><a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a><a href="/seguridad" class="a-login">Volver</a></nav>
+		<main class="dashboard-content">
+			<section class="form-panel">
+				<p class="eyebrow">Usuarios</p>
+				<h1>Editar usuario</h1>
+				<form action="/users/<%= user.id %>/update" method="POST" class="user-form">
+					<label>Nombre<input type="text" name="name" value="<%= user.name %>" required maxlength="255"></label>
+					<label>Nueva contraseña <span>(opcional)</span><input type="password" name="password" minlength="8"></label>
+					<fieldset class="permissions-fieldset">
+						<legend>Permisos de acceso</legend>
+						<label class="permission-option"><input type="checkbox" name="CanAccessProducts" value="1" <%= user.CanAccessProducts ? 'checked' : '' %>> Acceso a Productos</label>
+						<label class="permission-option"><input type="checkbox" name="CanAccessSecurity" value="1" <%= user.CanAccessSecurity ? 'checked' : '' %>> Acceso a Seguridad</label>
+					</fieldset>
+					  <div class="button-row"><button type="submit">Actualizar</button><a href="/seguridad" class="secondary-link">Cancelar</a></div>
+				</form>
+			</section>
+		</main>
+	</body>
+</html>

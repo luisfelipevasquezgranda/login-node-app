@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <title>Seguridad</title>
+  </head>
+  <body class="text-center" data-alert='<%= JSON.stringify(alert || null) %>'>
+    <nav class="topbar">
+      <a class="brand" href="/index"><img src="/resources/logo.svg" alt="Controla"><span>Controla</span></a>
+      <ul class="nav-menu">
+        <li><a href="/index">Principal</a></li>
+        <li><a href="/tablas">Tablas</a></li>
+        <li><a href="/facturacion">Facturas</a></li>
+        <li><a href="/seguridad" class="active">Seguridad</a></li>
+        <li><a href="/ayuda">Ayuda</a></li>
+        <li><a href="/acerca">Acerca de</a></li>
+      </ul>
+      <% if (login) { %>
+        <a href="/logout" class="a-logout">Logout</a>
+      <% } else { %>
+        <a href="/login" class="a-login">Go to login</a>
+      <% } %>
+    </nav>
+
+    <main class="dashboard-content">
+      <section class="tables-section">
+        <div class="module-heading">
+          <p class="eyebrow">Módulo</p>
+          <h1>Seguridad</h1>
+          <p>Administración de usuarios y permisos de acceso.</p>
+        </div>
+
+        <section class="users-section">
+          <div class="users-heading">
+            <div>
+              <p class="eyebrow">CRUD</p>
+              <h2>Usuarios del sistema</h2>
+              <% if (login) { %><p>Sesión iniciada como <strong><%= name %></strong></p><% } %>
+            </div>
+            <a href="/users/create" class="action-link">Nuevo usuario</a>
+          </div>
+
+          <div class="users-table-wrap">
+            <table class="users-table">
+              <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Contraseña</th><th>Productos</th><th>Seguridad</th><th>Acciones</th></tr>
+              </thead>
+              <tbody>
+                <% if (users.length === 0) { %>
+                  <tr><td colspan="6" class="empty-row">No hay usuarios registrados.</td></tr>
+                <% } else { %>
+                  <% users.forEach((user) => { %>
+                    <tr>
+                      <td><%= user.id %></td>
+                      <td><%= user.name %></td>
+                      <td><span class="status-chip">Protegida</span></td>
+                      <td><%= user.CanAccessProducts ? 'Permitido' : 'Sin acceso' %></td>
+                      <td><%= user.CanAccessSecurity ? 'Permitido' : 'Sin acceso' %></td>
+                      <td class="actions-cell">
+                        <a href="/users/<%= user.id %>/edit" class="action-link small">Editar</a>
+                        <form action="/users/<%= user.id %>/delete" method="POST" onsubmit="return confirm('¿Eliminar este usuario?');">
+                          <button type="submit" class="danger-button">Eliminar</button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }); %>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+      const alertData = JSON.parse(document.body.dataset.alert);
+      if (alertData) {
+        Swal.fire({
+          title: alertData.alertTitle,
+          text: alertData.alertMessage,
+          icon: alertData.alertIcon,
+          showConfirmButton: !!alertData.showConfirmButton,
+          timer: alertData.timer ? Number(alertData.timer) : undefined,
+        });
+      }
+    </script>
+  </body>
+</html>

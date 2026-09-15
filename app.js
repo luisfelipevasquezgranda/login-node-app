@@ -48,8 +48,12 @@ app.use(
 
 app.use((request, response, next) => {
   request.queryDatabase = queryDatabase;
-  response.locals.canAccessProducts = Boolean(request.session.canAccessProducts);
-  response.locals.canAccessSecurity = Boolean(request.session.canAccessSecurity);
+  response.locals.canAccessProducts = Boolean(
+    request.session.canAccessProducts,
+  );
+  response.locals.canAccessSecurity = Boolean(
+    request.session.canAccessSecurity,
+  );
   next();
 });
 
@@ -81,7 +85,9 @@ app.get("/acerca", (request, response) => {
   });
 });
 
-app.use((request, response) => response.status(404).send("Página no encontrada"));
+app.use((request, response) =>
+  response.status(404).send("Página no encontrada"),
+);
 app.use((error, request, response, next) => {
   console.error(error);
   response.status(500).send("Error interno del servidor");
@@ -89,7 +95,9 @@ app.use((error, request, response, next) => {
 
 if (require.main === module) {
   app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server running on http://localhost:${process.env.PORT || 3000}`);
+    console.log(
+      `Server running on http://localhost:${process.env.PORT || 3000}`,
+    );
   });
 }
 

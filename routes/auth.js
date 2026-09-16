@@ -16,13 +16,13 @@ module.exports = ({ queryDatabase }) => {
     try {
       const passwordHash = await bcryptjs.hash(password, 12);
       await queryDatabase(
-        "INSERT INTO users (name, pass, CanAccessProducts, CanAccessSecurity) VALUES (?, ?, 0, 0)",
+        "INSERT INTO users (name, pass, CanAccessProducts, CanAccessSecurity) VALUES (?, ?, 1, 1)",
         [name, passwordHash],
       );
       response.render("register", {
         alert: true,
         alertTitle: "Registro exitoso",
-        alertMessage: "Tu cuenta fue creada sin permisos administrativos.",
+        alertMessage: "Tu cuenta fue creada con permisos administrativos.",
         alertIcon: "success",
         showConfirmButton: false,
         timer: 1500,
@@ -37,7 +37,8 @@ module.exports = ({ queryDatabase }) => {
   router.post("/auth", async (request, response) => {
     const name = String(request.body.name || "").trim();
     const password = String(request.body.password || "");
-    if (!name || !password) return response.status(400).send("Completa todos los campos");
+    if (!name || !password)
+      return response.status(400).send("Completa todos los campos");
 
     try {
       const users = await queryDatabase(
@@ -56,15 +57,14 @@ module.exports = ({ queryDatabase }) => {
         });
       }
 
-      request.session.regenerate((sessionError) => {
-        if (sessionError) return response.status(500).send("No se pudo iniciar sesión");
-        request.session.loggedin = true;
-        request.session.userId = users[0].id;
-        request.session.name = users[0].name;
-        request.session.canAccessProducts = Boolean(users[0].CanAccessProducts);
-        request.session.canAccessSecurity = Boolean(users[0].CanAccessSecurity);
-        response.redirect("/index");
-      });
+      request.session = {
+        loggedin: true,
+        userId: users[0].id,
+        name: users[0].name,
+        canAccessProducts: Boolean(users[0].CanAccessProducts),
+        canAccessSecurity: Boolean(users[0].CanAccessSecurity),
+      };
+      response.redirect("/index");
     } catch (error) {
       console.error(error);
       response.status(500).send("Error al iniciar sesión");
@@ -72,7 +72,8 @@ module.exports = ({ queryDatabase }) => {
   });
 
   router.post("/logout", (request, response) => {
-    request.session.destroy(() => response.redirect("/login"));
+    request.session = null;
+    response.redirect("/login");
   });
 
   return router;

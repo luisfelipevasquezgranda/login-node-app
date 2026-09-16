@@ -1,5 +1,5 @@
 const express = require("express");
-const session = require("express-session");
+const session = require("cookie-session");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./env/.env" });
@@ -51,15 +51,12 @@ app.set("view engine", "ejs");
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "change-this-session-secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 8 * 60 * 60 * 1000,
-    },
+    name: "controla-session",
+    keys: [process.env.SESSION_SECRET || "change-this-session-secret"],
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 8 * 60 * 60 * 1000,
   }),
 );
 

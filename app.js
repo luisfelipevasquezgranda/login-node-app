@@ -16,14 +16,31 @@ const queryDatabase = (sql, params = []) =>
   });
 
 const runTransaction = async (callback) => {
-  await queryDatabase("START TRANSACTION");
+  const transaction = await new Promise((resolve, reject) => {
+    connection.getConnection((error, acquiredConnection) => {
+      if (error) reject(error);
+      else resolve(acquiredConnection);
+    });
+  });
+
+  const transactionQuery = (sql, params = []) =>
+    new Promise((resolve, reject) => {
+      transaction.query(sql, params, (error, results) => {
+        if (error) reject(error);
+        else resolve(results);
+      });
+    });
+
   try {
-    const result = await callback();
-    await queryDatabase("COMMIT");
+    await transactionQuery("START TRANSACTION");
+    const result = await callback(transactionQuery);
+    await transactionQuery("COMMIT");
     return result;
   } catch (error) {
-    await queryDatabase("ROLLBACK");
+    await transactionQuery("ROLLBACK");
     throw error;
+  } finally {
+    transaction.release();
   }
 };
 

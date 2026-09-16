@@ -33,8 +33,8 @@ module.exports = ({ queryDatabase, runTransaction }) => {
     const { IdCliente, NumDescuento, NumImpuesto, items } = request.body;
     if (!IdCliente || !Array.isArray(items) || items.length === 0) return response.status(400).json({ message: "Selecciona un cliente y agrega al menos un producto" });
     try {
-      const invoiceId = await runTransaction(async () => {
-        const products = await queryDatabase("SELECT IdProducto, NumPrecioVenta FROM tblproducto WHERE IdProducto IN (?)", [items.map((item) => Number(item.IdProducto))]);
+      const invoiceId = await runTransaction(async (transactionQuery) => {
+        const products = await transactionQuery("SELECT IdProducto, NumPrecioVenta FROM tblproducto WHERE IdProducto IN (?)", [items.map((item) => Number(item.IdProducto))]);
         const productMap = new Map(products.map((product) => [product.IdProducto, product]));
         const normalized = items.map((item) => {
           const product = productMap.get(Number(item.IdProducto));
@@ -45,13 +45,13 @@ module.exports = ({ queryDatabase, runTransaction }) => {
         const subtotal = normalized.reduce((sum, item) => sum + item.NumCantidad * item.NumPrecio, 0);
         const discount = Math.max(Number(NumDescuento) || 0, 0);
         const tax = Math.max(Number(NumImpuesto) || 0, 0);
-        let statuses = await queryDatabase("SELECT IdEstadoFactura FROM tblestado_factura WHERE LOWER(StrDescripcion) IN ('pendiente', 'creada') LIMIT 1");
+        let statuses = await transactionQuery("SELECT IdEstadoFactura FROM tblestado_factura WHERE LOWER(StrDescripcion) IN ('pendiente', 'creada') LIMIT 1");
         if (!statuses.length) {
-          const status = await queryDatabase("INSERT INTO tblestado_factura (StrDescripcion) VALUES ('Pendiente')");
+          const status = await transactionQuery("INSERT INTO tblestado_factura (StrDescripcion) VALUES ('Pendiente')");
           statuses = [{ IdEstadoFactura: status.insertId }];
         }
-        const invoice = await queryDatabase("INSERT INTO tblfactura (DtmFecha, IdCliente, NumDescuento, NumImpuesto, NumValorTotal, IdEstado, DtmFechaModifica, StrUsuarioModifico) VALUES (NOW(), ?, ?, ?, ?, ?, NOW(), ?)", [IdCliente, discount, tax, Math.max(subtotal - discount + tax, 0), statuses[0].IdEstadoFactura, request.session.name]);
-        for (const item of normalized) await queryDatabase("INSERT INTO tbldetalle_factura (IdFactura, NumCantidad, IdProducto, NumPrecio) VALUES (?, ?, ?, ?)", [invoice.insertId, item.NumCantidad, item.IdProducto, item.NumPrecio]);
+        const invoice = await transactionQuery("INSERT INTO tblfactura (DtmFecha, IdCliente, NumDescuento, NumImpuesto, NumValorTotal, IdEstado, DtmFechaModifica, StrUsuarioModifico) VALUES (NOW(), ?, ?, ?, ?, ?, NOW(), ?)", [IdCliente, discount, tax, Math.max(subtotal - discount + tax, 0), statuses[0].IdEstadoFactura, request.session.name]);
+        for (const item of normalized) await transactionQuery("INSERT INTO tbldetalle_factura (IdFactura, NumCantidad, IdProducto, NumPrecio) VALUES (?, ?, ?, ?)", [invoice.insertId, item.NumCantidad, item.IdProducto, item.NumPrecio]);
         return invoice.insertId;
       });
       response.json({ ok: true, invoiceId });

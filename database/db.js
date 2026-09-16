@@ -1,24 +1,17 @@
-// 2 - Invocamos a MySQL y realizamos la conexión
 const mysql = require("mysql2");
 
-const connection = mysql.createConnection({
-  // Con variables de entorno
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT, // Se añade el puerto configurado (22706)
+  port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME, // Se corrige DB_DATABASE a DB_NAME
+  database: process.env.DB_NAME || process.env.DB_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 5,
+  queueLimit: 0,
   ssl: {
-    rejectUnauthorized: false, // Requisito obligatorio para Railway
+    rejectUnauthorized: false,
   },
 });
 
-connection.connect((error) => {
-  if (error) {
-    console.error("El error de conexión es: " + error);
-    return;
-  }
-  console.log("¡Conectado a la Base de Datos!");
-});
-
-module.exports = connection;
+module.exports = pool;

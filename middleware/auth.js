@@ -13,14 +13,17 @@ function requireAccess(permission) {
         [request.session.userId],
       );
       if (!users.length) {
-        request.session.destroy(() => response.redirect("/login"));
+        request.session = null;
+        response.redirect("/login");
         return;
       }
 
       request.session.canAccessProducts = Boolean(users[0].CanAccessProducts);
       request.session.canAccessSecurity = Boolean(users[0].CanAccessSecurity);
       if (!request.session[permission]) {
-        return response.status(403).send("No tienes permiso para acceder a este módulo");
+        return response
+          .status(403)
+          .send("No tienes permiso para acceder a este módulo");
       }
       next();
     } catch (error) {

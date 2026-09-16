@@ -15,19 +15,18 @@ module.exports = ({ queryDatabase }) => {
 
     try {
       const passwordHash = await bcryptjs.hash(password, 12);
-      await queryDatabase(
+      const result = await queryDatabase(
         "INSERT INTO users (name, pass, CanAccessProducts, CanAccessSecurity) VALUES (?, ?, 1, 1)",
         [name, passwordHash],
       );
-      response.render("register", {
-        alert: true,
-        alertTitle: "Registro exitoso",
-        alertMessage: "Tu cuenta fue creada con permisos administrativos.",
-        alertIcon: "success",
-        showConfirmButton: false,
-        timer: 1500,
-        ruta: "login",
-      });
+      request.session = {
+        loggedin: true,
+        userId: result.insertId,
+        name,
+        canAccessProducts: true,
+        canAccessSecurity: true,
+      };
+      response.redirect("/index");
     } catch (error) {
       console.error(error);
       response.status(500).send("No se pudo registrar el usuario");

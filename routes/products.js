@@ -73,6 +73,7 @@ module.exports = ({ queryDatabase }) => {
   );
 
   // CREATE: insertar producto.
+  // CREATE: insertar producto.
   router.post(
     "/tablas/productos",
     productsAccess,
@@ -87,13 +88,17 @@ module.exports = ({ queryDatabase }) => {
         strFoto,
         NumStock,
       } = request.body;
+
       if (!String(StrNombre || "").trim() || !String(StrCodigo || "").trim())
         return response
           .status(400)
           .send("El nombre y el código son obligatorios");
+
       try {
         await queryDatabase(
-          `INSERT INTO tblproducto (StrNombre, StrCodigo, NumPrecioCompra, NumPrecioVenta, idCategoria, StrDetalle, strFoto, NumStock, DtmFechaModifica, StrUsuarioModifico) VALUES (?, ?, ?, ?, N?, ?, ?, ?, OW(), ?)`,
+          `INSERT INTO tblproducto 
+            (StrNombre, StrCodigo, NumPrecioCompra, NumPrecioVenta, idCategoria, StrDetalle, strFoto, NumStock, DtmFechaModifica, StrUsuarioModifico) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)`,
           [
             StrNombre.trim(),
             StrCodigo.trim(),
@@ -103,12 +108,13 @@ module.exports = ({ queryDatabase }) => {
             StrDetalle || null,
             strFoto || null,
             NumStock || 0,
-            request.session.name,
+            request.session.name || "Sistema",
           ],
         );
+
         response.redirect("/tablas/productos");
       } catch (error) {
-        console.error(error);
+        console.error("Error al insertar producto:", error);
         response.status(500).send("No se pudo crear el producto");
       }
     },

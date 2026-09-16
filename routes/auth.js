@@ -19,13 +19,14 @@ module.exports = ({ queryDatabase }) => {
         "INSERT INTO users (name, pass, CanAccessProducts, CanAccessSecurity) VALUES (?, ?, 1, 1)",
         [name, passwordHash],
       );
-      request.session = {
-        loggedin: true,
-        userId: result.insertId,
-        name,
-        canAccessProducts: true,
-        canAccessSecurity: true,
-      };
+
+      // Asignación correcta de sesión
+      request.session.loggedin = true;
+      request.session.userId = result.insertId;
+      request.session.name = name;
+      request.session.canAccessProducts = true;
+      request.session.canAccessSecurity = true;
+
       response.redirect("/index");
     } catch (error) {
       console.error(error);
@@ -44,6 +45,7 @@ module.exports = ({ queryDatabase }) => {
         "SELECT id, name, pass, CanAccessProducts, CanAccessSecurity FROM users WHERE name = ? LIMIT 1",
         [name],
       );
+
       if (!users.length || !(await bcryptjs.compare(password, users[0].pass))) {
         return response.render("login", {
           alert: true,
@@ -56,13 +58,13 @@ module.exports = ({ queryDatabase }) => {
         });
       }
 
-      request.session = {
-        loggedin: true,
-        userId: users[0].id,
-        name: users[0].name,
-        canAccessProducts: Boolean(users[0].CanAccessProducts),
-        canAccessSecurity: Boolean(users[0].CanAccessSecurity),
-      };
+      // Asignación correcta de sesión
+      request.session.loggedin = true;
+      request.session.userId = users[0].id;
+      request.session.name = users[0].name;
+      request.session.canAccessProducts = Boolean(users[0].CanAccessProducts);
+      request.session.canAccessSecurity = Boolean(users[0].CanAccessSecurity);
+
       response.redirect("/index");
     } catch (error) {
       console.error(error);
@@ -71,7 +73,11 @@ module.exports = ({ queryDatabase }) => {
   });
 
   router.post("/logout", (request, response) => {
-    request.session = null;
+    if (request.session.destroy) {
+      request.session.destroy();
+    } else {
+      request.session = null;
+    }
     response.redirect("/login");
   });
 

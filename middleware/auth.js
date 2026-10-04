@@ -1,3 +1,5 @@
+const usersModel = require("../models/users");
+
 function requireLogin(request, response, next) {
   if (!request.session.loggedin) return response.redirect("/login");
   next();
@@ -8,10 +10,7 @@ function requireAccess(permission) {
     if (!request.session.loggedin) return response.redirect("/login");
 
     try {
-      const users = await request.queryDatabase(
-        "SELECT CanAccessProducts, CanAccessSecurity FROM users WHERE id = ? LIMIT 1",
-        [request.session.userId],
-      );
+      const users = await usersModel.findUserById(request.session.userId);
       if (!users.length) {
         request.session = null;
         response.redirect("/login");

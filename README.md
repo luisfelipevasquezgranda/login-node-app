@@ -2,6 +2,16 @@
 
 Aplicación web con autenticación, permisos, clientes, productos, categorías y facturación.
 
+## Organización por capas
+
+El proyecto separa la aplicación en tres capas:
+
+- `routes/`: controladores HTTP; validan la petición, coordinan el flujo y eligen la respuesta o vista.
+- `models/`: concentran las consultas SQL y las operaciones de persistencia. Las transacciones de facturación también se coordinan desde esta capa.
+- `views/`: plantillas EJS para presentar la información.
+
+El acceso compartido al pool de MySQL y a las transacciones está en `models/database.js`; los modelos de cada dominio lo utilizan para acceder a la base de datos.
+
 ## Requisitos previos
 
 Para ejecutar este proyecto en otra máquina necesitas:

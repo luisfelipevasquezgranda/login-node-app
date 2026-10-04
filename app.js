@@ -4,39 +4,10 @@ const dotenv = require("dotenv");
 
 dotenv.config({ path: "./env/.env" });
 
-const pool = require("./database/db");
 const app = express();
 
 // Requisito fundamental para que cookie-session funcione bajo el HTTPS de Vercel
 app.set("trust proxy", 1);
-
-// Helper para consultas individuales sobre el Pool usando async/await
-const queryDatabase = async (sql, params = []) => {
-  const [results] = await pool.query(sql, params);
-  return results;
-};
-
-// Helper para Transacciones
-const runTransaction = async (callback) => {
-  const connection = await pool.getConnection();
-
-  const transactionQuery = async (sql, params = []) => {
-    const [results] = await connection.query(sql, params);
-    return results;
-  };
-
-  try {
-    await connection.beginTransaction();
-    const result = await callback(transactionQuery);
-    await connection.commit();
-    return result;
-  } catch (error) {
-    await connection.rollback();
-    throw error;
-  } finally {
-    connection.release();
-  }
-};
 
 app.use(express.urlencoded({ extended: false, limit: "50kb" }));
 app.use(express.json({ limit: "50kb" }));
@@ -56,8 +27,6 @@ app.use(
 );
 
 app.use((request, response, next) => {
-  request.queryDatabase = queryDatabase;
-
   // Garantizar objeto session para evitar lectura de undefined
   const sessionData = request.session || {};
   response.locals.canAccessProducts = Boolean(sessionData.canAccessProducts);
@@ -65,12 +34,11 @@ app.use((request, response, next) => {
   next();
 });
 
-const dependencies = { queryDatabase, runTransaction };
-app.use(require("./routes/auth")(dependencies));
-app.use(require("./routes/users")(dependencies));
-app.use(require("./routes/products")(dependencies));
-app.use(require("./routes/clients")(dependencies));
-app.use(require("./routes/invoices")(dependencies));
+app.use(require("./routes/auth"));
+app.use(require("./routes/users"));
+app.use(require("./routes/products"));
+app.use(require("./routes/clients"));
+app.use(require("./routes/invoices"));
 
 app.get("/index", (request, response) => {
   const sessionData = request.session || {};
